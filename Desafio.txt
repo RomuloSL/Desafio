@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main() {
+    srand(time(NULL));
+
+    unsigned char armarios = 0;
+
+    int opcao;
+    do {
+        printf("\nArmarios ocupados: ");
+        for (int i = 0; i < 8; ++i) {
+            if ((armarios >> i) & 1) {
+                printf("%d ", i + 1);
+            }
+        }
+
+        printf("\nArmarios livres: ");
+        for (int i = 0; i < 8; ++i) {
+            if (!((armarios >> i) & 1)) {
+                printf("%d ", i + 1);
+            }
+        }
+
+        printf("\n\nMenu:\n");
+        printf("1. Ocupar armario.\n");
+        printf("2. Liberar armario.\n");
+        printf("3. Sair.\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                if (armarios == 0b11111111) {
+                    printf("\nTodos os armarios estao ocupados!\n");
+                } else {
+                    int armario;
+                    do {
+                        armario = rand() % 8;
+                    } while ((armarios >> armario) & 1);
+                    armarios |= (1 << armario);
+                    printf("\nArmario %d ocupado com sucesso!\n", armario + 1);
+                }
+                break;
+            case 2:
+                if (armarios == 0) {
+                    printf("\nTodos os armarios estao livres!\n");
+                } else {
+                    int armario;
+                    do {
+                        printf("\nDigite o numero do armario a ser liberado (1-8): ");
+                        scanf("%d", &armario);
+                        armario -= 1;
+                    } while (armario < 0 || armario > 7 || !((armarios >> armario) & 1));
+
+                    armarios &= ~(1 << armario);
+                    printf("\nArmario %d liberado com sucesso!\n", armario + 1);
+                }
+                break;
+            case 3:
+                printf("\nSaindo do programa.\n");
+                break;
+            default:
+                printf("\nOpcao invalida! Tente novamente.\n");
+        }
+
+    } while (opcao != 3);
+
+    return 0;
+}
